@@ -1,7 +1,9 @@
 package joons;
 
 import java.util.ArrayList;
+
 import org.sunflow.SunflowAPI;
+import org.sunflow.image.Color;
 import org.sunflow.math.Matrix4;
 import org.sunflow.math.Point3;
 import org.sunflow.math.Vector3;
@@ -213,6 +215,44 @@ public class JoonsRenderer{
 				P.fill(params[0],params[1],params[2]);
 			}
 		}
+	}
+	
+	public void sunsky(boolean extendSkyBeyondHorizon) {
+	  sunsky(
+	      extendSkyBeyondHorizon,
+	      DEF_SUNSKY_DIR[0], DEF_SUNSKY_DIR[1], DEF_SUNSKY_DIR[2],
+	      DEF_SUNSKY_SAMPLES
+	      );
+	}
+	
+	public void sunsky(boolean extendSkyBeyondHorizon, float dirX, float dirY, float dirZ, int samples) {
+      sunsky(
+          extendSkyBeyondHorizon,
+          dirX, dirY, dirZ,
+          samples,
+          DEF_SUNSKY_UP[0], DEF_SUNSKY_UP[1], DEF_SUNSKY_UP[2],
+          DEF_SUNSKY_EAST[0], DEF_SUNSKY_EAST[1], DEF_SUNSKY_EAST[2]
+          );
+	}
+	
+	/**
+	 * The Sunsky light will make no attempt at creating a simulated light in your processing render. 
+	 * 
+	 * @param dirX
+	 * @param dirY
+	 * @param dirZ
+	 * @param samples
+	 * @param upX
+	 * @param upY
+	 * @param upZ
+	 * @param eastX
+	 * @param eastY
+	 * @param eastZ
+	 */
+	public void sunsky(boolean extendSkyBeyondHorizon, float dirX, float dirY, float dirZ, int samples, float upX, float upY, float upZ, float eastX, float eastY, float eastZ) {
+	  float[] params = new float[] {extendSkyBeyondHorizon ? 1 : 0, dirX, dirY, dirZ, samples, upX, upY, upZ, eastX, eastY, eastZ};
+	  JRFiller filler = new JRFiller(SUNSKY, params);
+	  fillers.add(filler);
 	}
 	
 	//cornell box implementation
@@ -446,12 +486,65 @@ public class JoonsRenderer{
 		}
         
 		//light block
+        int numLightsInScene = 0;
 		for(int i = 0; i < fillers.size(); i++){
 			JRFiller temp = fillers.get(i);
 			if(temp.getType() == LIGHT) {
-				if (!buildLight(temp, i)) return false;
+				if ( !buildLight(temp, i) ) {
+				  return false;
+				} else {
+				  numLightsInScene++;
+				}
 			}
 		}
+        
+        // Sunsky light block.
+        for(int i = 0; i < fillers.size(); i++) {
+          JRFiller filler = fillers.get(i);
+          if(filler.getType() == SUNSKY) {
+            // Now, we counted the lights in the previous loop becuase
+            // the Sunsky light in Sunflow doesn't emit photons and we 
+            // must have at least ONE photon emitting light in the scene
+            // or the scene will crash. We can also only have one Sunsky
+            // in our scene, so we'll keep the same light name, which
+            // the Sunflow API will just overwrite if there are subsequent
+            // calls to creating a Sunsky light.
+            if(numLightsInScene == 0) {
+              // We need to generate at least one light, so let's just create one
+              // that _should_ be harmless in the scene somewhere. We're going to
+              // Create a point light somewhere far away.
+              /*
+               * Parameters:
+               * "center": Point
+               * "power": Color
+               */
+              api.parameter("center", new Point3(-500, 0, -500));
+              api.parameter("power", "sRGB linear", 0.01f, 0.01f, 0.01f);
+              api.light("defaultPointLight", "point");
+            }            
+            /*
+            * Parameter list:
+            * [0] extendSkyBeyondHorizong
+            * [1] dirX
+            * [2] dirY
+            * [3] dirZ
+            * [4] samples
+            * [5] upX
+            * [6] upY
+            * [7] upZ
+            * [8] eastX
+            * [9] eastY
+            * [10] eastZ
+            */
+            api.parameter("ground.extendsky", filler.p[0] == 0);
+            api.parameter("up", new Vector3(filler.p[5], filler.p[6], filler.p[7]));
+            api.parameter("east", new Vector3(filler.p[8], filler.p[9], filler.p[10]));
+            api.parameter("samples", (int) filler.p[4]);
+            api.parameter("sundir", new Vector3(filler.p[1], filler.p[2], filler.p[3]));
+            api.parameter("turbidity", DEF_SUNSKY_TURBIDITY);
+            api.light("sunsky_" + i, SUNSKY);
+          }
+        }
         
         //shader block
 		for(int i = 0; i < fillers.size(); i++){

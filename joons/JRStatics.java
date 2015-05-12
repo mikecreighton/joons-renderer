@@ -39,6 +39,7 @@ public class JRStatics {
 	public static final String PHONG = "phong";
 	public static final String AMBIENT_OCCLUSION = "ambient_occlusion";
 	public static final String LIGHT = "light";
+	public static final String SUNSKY = "sunsky"; // Sunsky lighting
 
 	//sunflow image settings variables, default unless modified
 	public static double SIZE_MULTIPLIER = 1;
@@ -80,11 +81,18 @@ public class JRStatics {
 	public static final float DEF_RADIANCE = 5;
 	public static final float DEF_RGB = 255;
 	public static final float DEF_GLASS_ALPHA = 150;
-	public static final int DEF_SAMPLES = 16;
+	public static final int   DEF_SAMPLES = 16;
 	public static final float DEF_CORB_RADIANCE = 20;
 	public static final float DEF_CORB_COLOR_1 = 220;
 	public static final float DEF_CORB_COLOR_2 = 130;
 	public static final float DEF_AMB_OCC_MAX_DIST = 50;
+	
+	// Default values for Sunsky lighting.
+	public static final float[] DEF_SUNSKY_UP        = {0, -1, 0};
+	public static final float[] DEF_SUNSKY_EAST      = {1, 0, 0};
+	public static final float[] DEF_SUNSKY_DIR       = {-0.5f, -0.6f, 0.5f};
+	public static final int     DEF_SUNSKY_SAMPLES   = 128;
+	public static final float   DEF_SUNSKY_TURBIDITY = 6.0f;
 	
 	
 	//static methods
