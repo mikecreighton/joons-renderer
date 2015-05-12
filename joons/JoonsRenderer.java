@@ -12,7 +12,7 @@ import static joons.JRStatics.*;
 
 public class JoonsRenderer{
 
-	private JRRecorder recorder;	
+	public JRRecorder recorder;	
 	private SunflowAPI api;
 	private boolean renderIsAGo;
 	private boolean rendering = false;
@@ -23,6 +23,16 @@ public class JoonsRenderer{
 		FOV=((PGraphicsOpenGL) P.g).cameraFOV; //default value from Processing
 		ASPECT=((PGraphicsOpenGL) P.g).cameraAspect; //default value from Processing
 		recorder = new JRRecorder(); 
+	}
+	
+	public boolean isRendering()
+	{
+	  return rendering;
+	}
+	
+	public boolean isRendered()
+	{
+	  return rendered;
 	}
 	
 	//rendering command interface
