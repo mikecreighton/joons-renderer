@@ -217,6 +217,12 @@ public class JoonsRenderer{
 		}
 	}
 	
+	/**
+	 * Adds a Sunsky light to the scene with default sun, up, and east directions. The Sunsky light will make no 
+     * attempt at creating a simulated light in your Processing render. 
+	 * 
+	 * @param extendSkyBeyondHorizon Choose whether to have the sky extend beyond the horizon. If false, a horizon plane will exist at the scene origin. 
+	 */
 	public void sunsky(boolean extendSkyBeyondHorizon) {
 	  sunsky(
 	      extendSkyBeyondHorizon,
@@ -224,7 +230,18 @@ public class JoonsRenderer{
 	      DEF_SUNSKY_SAMPLES
 	      );
 	}
-	
+
+    
+    /**
+     * Adds a Sunsky light to the scene with default up and east directions. The Sunsky light will make no 
+     * attempt at creating a simulated light in your Processing render. 
+     * 
+     * @param extendSkyBeyondHorizon Choose whether to have the sky extend beyond the horizon. If false, a horizon plane will exist at the scene origin.
+     * @param dirX    X component of the directional position of the sun in the sky (0.f .. 1.0f)
+     * @param dirY    X component of the directional position of the sun in the sky (0.f .. 1.0f)
+     * @param dirZ    X component of the directional position of the sun in the sky (0.f .. 1.0f)
+     * @param samples Number of samples to use when rendering the sunsky light 
+     */
 	public void sunsky(boolean extendSkyBeyondHorizon, float dirX, float dirY, float dirZ, int samples) {
       sunsky(
           extendSkyBeyondHorizon,
@@ -238,16 +255,17 @@ public class JoonsRenderer{
 	/**
 	 * The Sunsky light will make no attempt at creating a simulated light in your processing render. 
 	 * 
-	 * @param dirX
-	 * @param dirY
-	 * @param dirZ
-	 * @param samples
-	 * @param upX
-	 * @param upY
-	 * @param upZ
-	 * @param eastX
-	 * @param eastY
-	 * @param eastZ
+     * @param extendSkyBeyondHorizon Choose whether to have the sky extend beyond the horizon. If false, a horizon plane will exist at the scene origin.
+     * @param dirX    X component of the directional position of the sun in the sky (0.f .. 1.0f)
+     * @param dirY    X component of the directional position of the sun in the sky (0.f .. 1.0f)
+     * @param dirZ    X component of the directional position of the sun in the sky (0.f .. 1.0f)
+     * @param samples Number of samples to use when rendering the sunsky light 
+	 * @param upX     X component of the up direction within the scene (0.f .. 1.0f)
+	 * @param upY     Y component of the up direction within the scene (0.f .. 1.0f)
+	 * @param upZ     Z component of the up direction within the scene (0.f .. 1.0f)
+	 * @param eastX   X component of the east direction within the scene (0.f .. 1.0f)
+	 * @param eastY   Y component of the east direction within the scene (0.f .. 1.0f)
+	 * @param eastZ   Z component of the east direction within the scene (0.f .. 1.0f)
 	 */
 	public void sunsky(boolean extendSkyBeyondHorizon, float dirX, float dirY, float dirZ, int samples, float upX, float upY, float upZ, float eastX, float eastY, float eastZ) {
 	  float[] params = new float[] {extendSkyBeyondHorizon ? 1 : 0, dirX, dirY, dirZ, samples, upX, upY, upZ, eastX, eastY, eastZ};
